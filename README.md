@@ -250,3 +250,81 @@ Android中，Activity是所有程序的根本，所有程序的流程都运行�
 ```java
 Toast.makeText(MainActivity.this,"WIFI已断开",Toast.LENGTH_SHORT).show();
 ```
+## 第三天
+
+### Fragment
+#### 什么是 Fragment?（类似于前端中的组件化的概念）
+1. 具备生命周期，子activity
+2. 必须委托在activity中才能运行
+#### 如何创建并运行
+1. 创建；直接在`java`目录下，通过`android studio`创建一个`fragment`,`layout`目录下会同样生成一个对应的`xml`
+2. 修改：
+```java
+    public class BlankFragment1 extends Fragment {
+        private View     root;
+        private TextView textView;
+        private Button   button;
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+        }
+        /**
+        * 创建视图
+        */
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                Bundle savedInstanceState) {
+            if (root == null) {
+                root = inflater.inflate(R.layout.fragment_blank1, container, false);
+            }
+            textView = root.findViewById(R.id.textview);
+            button = root.findViewById(R.id.btn);
+            button.setOnClickListener((View view) -> {
+                textView.setText("点击修改");
+            });
+            return root;
+        }
+    }
+```
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 切记要修改为 LinearLayout，否则里面的组件都会挤在左上角 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BlankFragment1"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="@string/hello_blank_fragment"
+        android:id="@+id/textview" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="按钮"
+        android:id="@+id/btn" />
+</LinearLayout>
+```
+3. 挂载：因Fragment创建完成后并不能单独使用，所以需要在`activity_main.xml`中挂载之后才可显示
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <fragment
+        android:name="com.example.myfragment.BlankFragment1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment1" />
+</LinearLayout>
+```
+4. 注意事项： `fragment`必须添加id，否则会启动失败，报如下错误
+```
+This <fragment> tag should specify an id or a tag to preserve state across activity restarts
+```
