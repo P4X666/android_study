@@ -348,11 +348,12 @@ This <fragment> tag should specify an id or a tag to preserve state across activ
     />
 </LinearLayout>
 ```
-*然后在Activity中，通过代码将Fragment添加进Activity中。动态添加Fragment主要分为4步：*
-1. 获取到FragmentManager对象，在V4包中通过getSupportFragmentManager方法获取，在系统中原生的Fragment是通过getFragmentManager获得的。
-2. 开启一个事务，通过调用beginTransaction方法开启。
-3. 向容器内加入Fragment，一般使用add或者replace方法实现，需要传入容器的id和Fragment的实例。
-4. 提交事务，调用commit方法提交。
+*然后在Activity中，通过代码将Fragment添加进Activity中。动态添加Fragment主要分为5步：*
+1. 创建一个待处理的`fragment`
+2. 获取`FragmentManager`，一般都是通过`getSupportFragmentManager()`
+3. 开启一个事务，通过调用beginTransaction方法开启。
+4. 使用`transaction`进行`fragment`的替换，一般使用add或者replace方法实现，需要传入容器的id和Fragment的实例。
+5. 提交事务，调用commit方法提交。
 ```java
 package com.example.dynamicfragment;
 
