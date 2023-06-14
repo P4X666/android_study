@@ -398,3 +398,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 }
 ```
+#### 生命周期vsActivity的生命周期
+
+##### Activity的生命周期
+1. Created
+2. Started
+3. Resumed
+4. Paused
+5. Stopped
+6. Destroyed
+
+##### Fragment的生命周期
+###### Created
+1. `onAttach`: 与`Activity`绑定，因为Fragment创建完成后并不能单独使用
+2. `onCreate`：创建，通常做`bundle`相关的操作
+3. `onCreateView`: 对ui进行操作
+4. `onActivityCreated`：`Activity`已经创建
+###### onStart
+###### onResume
+###### onPause
+###### onStop
+###### Destroyed
+1. `onDestroyView`
+2. `onDestroy`：销毁
+3. `onDetach`
