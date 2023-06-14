@@ -257,6 +257,8 @@ Toast.makeText(MainActivity.this,"WIFI已断开",Toast.LENGTH_SHORT).show();
 1. 具备生命周期，子activity
 2. 必须委托在activity中才能运行
 #### 如何创建并运行
+##### 静态加载
+
 1. 创建；直接在`java`目录下，通过`android studio`创建一个`fragment`,`layout`目录下会同样生成一个对应的`xml`
 2. 修改：
 ```java
@@ -327,4 +329,71 @@ Toast.makeText(MainActivity.this,"WIFI已断开",Toast.LENGTH_SHORT).show();
 4. 注意事项： `fragment`必须添加id，否则会启动失败，报如下错误
 ```
 This <fragment> tag should specify an id or a tag to preserve state across activity restarts
+```
+##### 动态加载
+*在布局文件中添加Fragment的方法，非常简单，但是有一个缺点，那就是一旦添加就不能在运行时将其删除*  
+挂载：在`activity_main.xml`中使用`FrameLayout`存放Fragment
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+>
+    <FrameLayout 
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+    />
+</LinearLayout>
+```
+*然后在Activity中，通过代码将Fragment添加进Activity中。动态添加Fragment主要分为4步：*
+1. 获取到FragmentManager对象，在V4包中通过getSupportFragmentManager方法获取，在系统中原生的Fragment是通过getFragmentManager获得的。
+2. 开启一个事务，通过调用beginTransaction方法开启。
+3. 向容器内加入Fragment，一般使用add或者replace方法实现，需要传入容器的id和Fragment的实例。
+4. 提交事务，调用commit方法提交。
+```java
+package com.example.dynamicfragment;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Button btn1 = findViewById(R.id.btn);
+        btn1.setOnClickListener(this);
+        Button btn2 = findViewById(R.id.btn1);
+        btn2.setOnClickListener(this);
+    }
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.btn){
+            replaceFragment(new BlankFragment1());
+        }else {
+            replaceFragment(new BlankFragment2());
+        }
+    }
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+//        开始事务
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        替换当前ui
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+//        添加到路由栈，类似与history与组件之间的关联
+        fragmentTransaction.addToBackStack(null);
+//        提交事务
+        fragmentTransaction.commit();
+    }
+}
 ```
