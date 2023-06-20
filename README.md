@@ -422,3 +422,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 1. `onDestroyView`
 2. `onDestroy`：销毁
 3. `onDetach`
+
+##### 生命周期顺序
+
+1. 打开界面
+onCreate -> onCreateView -> onActivityCreated -> onStart -> onResume
+2. 按下主屏键
+onPause -> onStop
+3. 重新打开界面
+onStart -> onResume
+4. 按后退键
+onPause -> onStop -> onDestroyView -> onDestroy -> onDetach
