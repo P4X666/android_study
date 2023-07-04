@@ -487,6 +487,48 @@ SharedPreference 相关修改使用 apply 方法进行提交会先写入内存�
 方法是直接写入磁盘。如果频繁操作的话 apply 的性能会优于 commit，apply会将最后修改内容写入磁盘。
 但是如果希望立刻获取存储操作的结果，并据此做相应的其他操作，应当使用 commit。
 ```
+#### Intent的Bundle
+第一个Activity存
+```java
+//创建意图对象
+ Intent intent = new Intent(MainActivity.this,TwoActivity.class);
+ //用数据捆传递数据
+ Bundle bundle = new Bundle();
+ bundle.putString("data", str);
+ //把数据捆设置改意图
+ intent.putExtra("bun", bundle);
+ //激活意图
+ startActivity(intent);
+```
+第二个取
+
+```java
+//获取Bundle
+ Intent intent = getIntent();
+ Bundle bundle = intent.getBundleExtra("bun");
+ String str = bundle.getString("data");
+ tv.setText(str);
+```
+#### Intent的putExtra
+第一个Activity存
+```java
+//创建意图对象
+ Intent intent = new Intent(this,TwoActivity.class);
+ //设置传递键值对
+ intent.putExtra("data",str);
+ //激活意图
+ startActivity(intent);
+```
+第二个取
+
+```java
+// 获取意图对象
+ Intent intent = getIntent();
+ //获取传递的值
+ String str = intent.getStringExtra("data");
+ //设置值
+ tv.setText(str);
+```
 ## 注意事项
 1. 依赖后面改为`+`会默认使用最新的依赖，后续如果换人接手或接手老项目会导致项目启动报错，报错通常如下，
 建议显式使用依赖
