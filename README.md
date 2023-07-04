@@ -433,3 +433,64 @@ onPause -> onStop
 onStart -> onResume
 4. 按后退键
 onPause -> onStop -> onDestroyView -> onDestroy -> onDetach
+
+#### 与viewpage结合
+[代码详见](https://github.com/P4X666/android_demo/tree/master/viewpager_fragment)
+
+### Activity
+Activity是Android组件中最基本也是最常用的一种组件，在一个Android应用中，一个Activity通常就是一个单独的屏幕
+#### 创建和注册
+一般创建Activity的步骤总结如下：
+1. 定义一个类继承自 android.app.Activity或者其子类。
+2. 在res/layout目录中创建一个xml文件，用于创建 Activity的布局。
+3. 在 AndroidManifest.xml 文件中注册所创建的 Activity。
+4. 重写 Activity的 onCreate()方法，并在该方法中使用 setContentView()加载指定的布局文件。
+
+**需要注意的是setContentView()方法既可以接收布局文件对应的资源id为参数，也可以接收View对象为参数**
+
+### 数据传递
+#### SharedPreferences  
+`SharedPreferences`用来进程间共享数据，它只能存储简单数据类型（int、boolean、String 等），
+复杂数据类型建议使用文件、数据库等其他方式存储   
+存数据
+```java
+    SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+    SharedPreferences.Editor editor = sp.edit();
+    editor.putString("name", "lala");
+    editor.putInt("age", 18);
+    editor.putBoolean("man", true);
+    editor.apply();
+```
+取数据
+```java
+    SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+    String name = sp.getString("name", "aaa");
+    int age = sp.getInt("age", 0);
+    boolean man = sp.getBoolean("man", false);
+```
+清除数据
+```java
+    SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+    SharedPreferences.Editor editor = sp.edit();
+    editor.clear();
+```
+1. 上面用到的是Context类的getSharedPreferences()方法，需要传入文件名和操作模式，默认为0也就是MODE_PRIVATE。  
+获取SharedPreferences还有两种方法：Activity类的getPreferences()方法，和PreferenceManager类的静态方法getDefaultSharedPreferences()。前者会自动将当前类名作为文件名，只需要传入操作模式。后者需传入context，并自动使用包名作为前缀来命名SharedPreferences文件。
+
+2.提交SharedPreferences数据时，可以用SharedPreferences.Editor的commit()方法，也 可以用它的apply()方法。两者有什么区别呢，下面的解释来自《阿里巴巴Android开发手册》：
+```code
+SharedPreference 提交数据时，尽量使用Editor#apply()，而非Editor#commit()。一般来讲，仅当需要确定提交结果，并据此有后续操作时，才使用 Editor#commit()。
+```
+说明
+```code
+SharedPreference 相关修改使用 apply 方法进行提交会先写入内存，然后异步写入磁盘，commit
+方法是直接写入磁盘。如果频繁操作的话 apply 的性能会优于 commit，apply会将最后修改内容写入磁盘。
+但是如果希望立刻获取存储操作的结果，并据此做相应的其他操作，应当使用 commit。
+```
+## 注意事项
+1. 依赖后面改为`+`会默认使用最新的依赖，后续如果换人接手或接手老项目会导致项目启动报错，报错通常如下，
+建议显式使用依赖
+```bash
+avoid using + in version numbers can lead to unpredictable and unrepeatable builds
+```
+![avoid using + in version numbers](./images/using+in_version.png)
