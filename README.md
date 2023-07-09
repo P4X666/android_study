@@ -536,3 +536,27 @@ SharedPreference 相关修改使用 apply 方法进行提交会先写入内存�
 avoid using + in version numbers can lead to unpredictable and unrepeatable builds
 ```
 ![avoid using + in version numbers](./images/using+in_version.png)
+
+2. 在下载别人的项目后，尽可能的不要去动依赖的版本，比如之前用的是`java8`，升级之后依赖会到`java11`，容易出现下列报错
+```java
+An exception occurred applying plugin request [id: 'com.android.application']
+> Failed to apply plugin 'com.android.internal.application'.
+   > Android Gradle plugin requires Java 11 to run. You are currently using Java 1.8.
+     You can try some of the following options:
+       - changing the IDE settings.
+       - changing the JAVA_HOME environment variable.
+       - changing `org.gradle.java.home` in `gradle.properties`.
+```
+![修改java版本](./images/build.gradle.modifyjavaversion.png)  
+**如果未生效，可重启`android studio`**
+3. 在程序build成功后，打开模拟器运行app时，出现以下报错
+```java
+Execution failed for task ':app:packageDebug'. 
+A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
+com.android.ide.common.signing.KeytoolException: 
+Failed to read key AndroidDebugKey from store "你的.android路径\.android\debug.keystore": 
+Invalid keystore format
+```
+因为被进程锁住了。解决方法就是删除报错提到的路径下debug.keystore和debug.keystore.lock，模拟器运行时会重新生成新的debug.keystore  
+删除可能会提示debug.keystore文件已被Java打开，我们点击取消    
+`Ctrl + Shift + Esc`打开任务管理器，找到名称为Java（TM）Platform SE binary的进程(如果用的java是`android studio`自带的，那么这个进程就在`android studio`下面)，结束进程  
