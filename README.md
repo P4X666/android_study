@@ -529,6 +529,34 @@ SharedPreference 相关修改使用 apply 方法进行提交会先写入内存�
  //设置值
  tv.setText(str);
 ```
+
+### startActivity，startActivityForResult和registerForActivityResult的异同
+相同点是它们都可以从当前`Activity`直接跳转到另一个`Activity`
+1. startActivity
+```java
+// 直接跳转到另一个Activity，只做跳转
+startActivity(new Intent(CurrentActivity.this, NextActivity.class));
+```
+2. `startActivityForResult`(已废弃)
+当我们需要跳转到另一个Activity并需要拿到返回结果时，可以使用startActivityForResult()来实现，不过现已废弃，
+下面使用`registerForActivityResult`来代替
+3. `registerForActivityResult`
+使用Intent在activity（fragment）间通信，返回ActivityResult  
+* *
+```java
+private ActivityResultLauncher<Intent> activityResultLauncher;
+...
+// 在onCreate或onAttach中完成初始化
+activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            Intent data = result.getData();
+            if (data != null) {
+                // 数据处理
+            }
+        });
+// 启动代码，在合适的地方调用即可
+activityResultLauncher.launch(Intent intent);
+```
+
 ## 注意事项
 1. 依赖后面改为`+`会默认使用最新的依赖，后续如果换人接手或接手老项目会导致项目启动报错，报错通常如下，
 建议显式使用依赖
