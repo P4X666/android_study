@@ -439,14 +439,63 @@ onPause -> onStop -> onDestroyView -> onDestroy -> onDetach
 
 ### Activity
 Activity是Android组件中最基本也是最常用的一种组件，在一个Android应用中，一个Activity通常就是一个单独的屏幕
-#### 创建和注册
+#### 创建、注册和销毁
 一般创建Activity的步骤总结如下：
 1. 定义一个类继承自 android.app.Activity或者其子类。
 2. 在res/layout目录中创建一个xml文件，用于创建 Activity的布局。
 3. 在 AndroidManifest.xml 文件中注册所创建的 Activity。
 4. 重写 Activity的 onCreate()方法，并在该方法中使用 setContentView()加载指定的布局文件。
-
+代码如下
+```java
+public class FirstActivity extends AppcompatActivity{
+    protected void onCreate(Bundle savedInstanceStatus){
+        super.onCreate(saveInstanceState);
+        setContentView(R.id.first)
+    }
+}
+```
 **需要注意的是setContentView()方法既可以接收布局文件对应的资源id为参数，也可以接收View对象为参数**
+5. 所有的活动都要再```AndroidManifest.xml```中进行注册才能生效
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 相机权限 -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 文件写权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 如果未在 <uses-feature> 声明中将 android:required 设置为 false，则 Android 会假定应用必须在有该硬件的情况下才能运行。因此，系统会阻止某些设备安装应用 -->
+    <!-- uses-feature，只是起到指示性的作用，不是强制的检测 -->
+    <!-- 摄像头 -->
+    <uses-feature android:name="android.hardware.camera" />
+
+    <application
+        android:name=".app.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Demo"
+        android:usesCleartextTraffic="true"> // 允许应用请求http，android默认只能请求https
+        <activity
+            android:name=".activity.ServiceActivity"
+            android:exported="false" />
+        <!-- 主应用 -->
+        <activity
+            android:name=".activity.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+```
+可以看到，Activity的注册声明要放在标签内，这里通过标签来对活动进行注册的。
+不过，仅仅注册活动仍然不行，因为需要为程序配置主活动：在标签内部加入`<intent - filter>`标签  
+
+6. 销毁就比较简单了，直接在`activity`中调用`finish()`即可，效果和按下Back键是一样的
 
 ### 数据传递
 #### SharedPreferences  
