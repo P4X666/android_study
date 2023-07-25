@@ -637,3 +637,9 @@ Invalid keystore format
 因为被进程锁住了。解决方法就是删除报错提到的路径下debug.keystore和debug.keystore.lock，模拟器运行时会重新生成新的debug.keystore  
 删除可能会提示debug.keystore文件已被Java打开，我们点击取消    
 `Ctrl + Shift + Esc`打开任务管理器，找到名称为Java（TM）Platform SE binary的进程(如果用的java是`android studio`自带的，那么这个进程就在`android studio`下面)，结束进程  
+
+## `gravity`和`layout_gravity`的区别
+1. android:gravity  属性是对该view中内容的限定．比如一个button 上面的text. 你可以设置该text 相对于view的靠左，靠右等位置．
+2. android:layout_gravity 是用来设置该view相对与父view 的位置．比如一个button 在linearlayout里，你想把该button放在linearlayout里靠左、靠右等位置就可以通过该属性设置  
+
+**即android:gravity用于设置View中内容相对于View组件的对齐方式，而android:layout_gravity用于设置View组件相对于Container的对齐方式。**
